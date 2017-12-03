@@ -119,12 +119,12 @@ This function targets hook callbacks added using anonymous functions (aka closur
 
 Closures are the most tricky callbacks to remove, because it is hard to distinguish them.
 
-In facts, all the closures are in PHP instances of the same class, `Closure`, and not having a method name there's very 
+In facts, in PHP, all closures are instances of the same class, `Closure`, and not having a method name there's very 
 little left to distinguish one closure from another.
 
 This function uses two ways to distinguish closures:
 
-- the object bound to the closure
+- the object the closure is bound to,
 - the closure signature.
 
 ### About closures bound object
@@ -139,11 +139,10 @@ all (i.e. the closure is not bound).
 
 It worth nothing that:
 
-- Closure can be "bound" to any object after they are crated (see docs for [`Closure::bind`](http://php.net/manual/en/closure.bind.php) 
-  and [`Closure::bindTo`](http://php.net/manual/en/closure.bindto.php)).
-  So even closures created outside classes or inside static methods might have a bound object.
+- Closure can be "bound" to any object after they are created (see docs for [`Closure::bind`](http://php.net/manual/en/closure.bind.php) and [`Closure::bindTo`](http://php.net/manual/en/closure.bindto.php)).
+  So even closures created outside any class or inside class static methods might have a bound object.
 - [Closures can be created as "static"](http://php.net/manual/en/functions.anonymous.php#functions.anonymous-functions.static).
-  Static closures are never bound so don't have access to any `$this`, and can't be bound to any object after creation.
+  Static closures are never bound, so don't have access to any `$this`, and can't be bound to any object after creation.
   Any attempt to bind a static closure will fail and result in a warning.
   
 
@@ -165,12 +164,12 @@ The **second optional param**, `$target_this`, can be used to identify the `$thi
 It can be:
 
 - `null`, which means "all of them", i.e. the function will not take into account the object bound to closure to see
-  if the closure should be removed.
+  if the closure should be removed or not.
 - `false`, the function will only remove static closures or closure with no bound object.
 - a string containing a class name, the function will only remove closures having a bound object of the given class.
 - an object instance, the function will only remove closures bound to given object.
 
-The **third optional param**, `$target_args` is an array that can be used to distinguish closures by they arguments.
+The **third optional param**, `$target_args` is an array that can be used to distinguish closures by their parameters.
 
 For example, a closure like this:
 
@@ -178,13 +177,13 @@ For example, a closure like this:
 $closure = function (string $foo, int $bar, $baz ) { /*... */ };
 ```
 
-can be targeted just by param _names_, passing an array like:
+can be targeted just by parameter _names_, passing an array like:
 
 ```php
 [ '$foo', '$bar', '$baz' ]
 ```
 
-or by _names_ and _types_, passing an array like:
+or by parameter _names_ and _types_, passing an array like:
 
 
 ```php
@@ -192,18 +191,15 @@ or by _names_ and _types_, passing an array like:
 ```
 
 The two styles can't be mixed, if the type declaration is used for one param must be used for all of them.
-In case any of the param has no type declaration, `null` has to be used as shown above.
+In case any of the parameters has no type declaration, `null` has to be used as shown above.
 When the param type is an object, the fully qualified name must be used.
 
-It is also possible to pass `null` as third argument (or don't pass anything, which is the same because the param defaults to `null`)
-and in that case closures to be removed will be only distinguished by the bound `$this`.
+It is also possible to pass `null` as third argument (or don't pass anything, which is the same because the param defaults to `null`), and in that case closures to be removed will be only distinguished by the bound `$this`.
 
-In the case both second and third argument are `null`, which is the default, all closures added to given hook are removed 
+In the case both second and third arguments are `null`, which is the default, all closures added to given hook are removed 
 (only optionally filtered by priority).
 
-By the means of bound `$this`, signature, and priority, it is possible to *very effectively* distinguish closures to remove,
-the only possibility that two closures can't be distinguished one from the other is that they both are added to the same hook,
-at the same priority, from the same class and they have the same signature...
+By the means of bound `$this`, signature, and priority, it is possible to *very effectively* distinguish closures to remove. In facts, the only possibility that two closures can't be distinguished one from the other is that they both are added to the same hook, at the same priority, from the same class and they have the same signature...
 
 ### Usage example
 
@@ -278,10 +274,9 @@ can be used to remove all the static methods of `Foo` class that are added to `i
 
 This function can be used to remove hook callbacks added with a specific object instance.
 
-When holding the exact instance used to add some hooks, it would be possible to remove those hooks via core 
-functions `remove_action` / `remove_filter`, but this function can be still useful because in a single call remove all 
-the callbacks that uses the instance, no matter the method or the priority used (even if priority can be optionally took 
-into account).
+When having access to the exact instance used to add some hooks, it would be possible to remove those hooks via core 
+functions `remove_action` / `remove_filter`, but this function can still be useful because in a single call can remove all 
+the hooks that use the instance, no matter the method or the priority used.
 
 `remove_instance_hook` signature is:
 
