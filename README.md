@@ -104,7 +104,7 @@ class Foo {
 	}
 }
 
-nee Foo();
+new Foo();
 
 // Somewhere **else**...
 remove_object_hook( 'init', Foo::class, 'init' );
@@ -214,6 +214,8 @@ class Foo {
 
 }
 
+new Foo();
+
 
 // Somewhere *else*...
 remove_closure_hook( 'the_title', Foo::class, [ '$title' ] );
@@ -252,6 +254,8 @@ class Foo {
 		// some code here...
 	}
 }
+
+Foo::instance();
 
 
 // Somewhere **else**...
@@ -344,6 +348,8 @@ class Foo {
 	}
 
 }
+
+new Foo();
 
 
 // Somewhere **else**...
