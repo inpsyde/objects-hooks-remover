@@ -68,7 +68,7 @@ function remove_object_hook(
 	string $class_name,
 	string $method_name = null,
 	int $priority = null,
-	bool $remove_static_callbacks = FALSE
+	bool $remove_static_callbacks = false
 ): int
 ```
 
@@ -96,9 +96,9 @@ The return value of this and all the other function of the package is the number
 class Foo {
 
 	public function __construct() {
-    	add_action( 'init', [ $this, 'init' ], 99 );
-    }
-
+		add_action( 'init', [ $this, 'init' ], 99 );
+	}
+	
 	public function init() {
 		// some code here...
 	}
@@ -212,9 +212,9 @@ at the same priority, from the same class and they have the same signature...
 class Foo {
 
 	public __construct() {
-    	add_filter( 'the_title', function( $title ) { /* ... */ } );
-    	add_filter( 'the_content', function( string $content ) { /* ... */ } );
-    }
+		add_filter( 'the_title', function( $title ) { /* ... */ } );
+		add_filter( 'the_content', function( string $content ) { /* ... */ } );
+	}
 
 }
 
@@ -249,8 +249,8 @@ Example:
 class Foo {
 
 	public static function instance() {
-    	add_action( 'init', [ __CLASS__, 'init' ], 99 );
-    }
+		add_action( 'init', [ __CLASS__, 'init' ], 99 );
+	}
 
 	public static function init() {
 		// some code here...
@@ -300,10 +300,10 @@ remove_instance_hook(
 class Foo {
 
 	public __construct() {
-    	add_filter( 'the_title', [ $this, 'the_title_early', 1 ] );
-    	add_filter( 'the_title', [ $this, 'the_title_late', 9999 ] );
-    	add_filter( 'the_content', [ $this, 'the_content' ] );
-    }
+		add_filter( 'the_title', [ $this, 'the_title_early', 1 ] );
+		add_filter( 'the_title', [ $this, 'the_title_late', 9999 ] );
+		add_filter( 'the_content', [ $this, 'the_content' ] );
+	}
 
 }
 
@@ -341,12 +341,12 @@ function remove_invokable_hook(
 class Foo {
 
 	public __construct() {
-    	add_filter( 'template_redirect', $this );
-    }
+		add_filter( 'template_redirect', $this );
+	}
     
-    public __invoke() {
-        /* some code here */
-    }
+	public __invoke() {
+		/* some code here */
+	}
 
 }
 
