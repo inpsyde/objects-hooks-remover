@@ -6,7 +6,7 @@
 
 ## Minimum Requirements and Dependencies
 
-_Object Hooks Remover_ is a [Composer](https://getcomposer.org), installable via the package name `inpsyde/object-hooks-remover`.
+_Object Hooks Remover_ is a [Composer](https://getcomposer.org) package, installable via the package name `inpsyde/object-hooks-remover`.
 
 It has no userland dependencies, it just requires **PHP 7+**.
 
