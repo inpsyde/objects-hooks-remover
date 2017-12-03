@@ -1,0 +1,45 @@
+{
+    "name": "inpsyde/object-hooks-remover",
+    "description": "Package to remove WordPress hook callbacks that uses object methods or closures.",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Inpsyde GmbH",
+            "email": "hello@inpsyde.com",
+            "homepage": "http://inpsyde.com",
+            "role": "Company"
+        },
+        {
+            "name": "Giuseppe Mazzapica",
+            "email": "g.mazzapica@inpsyde.com",
+            "role": "Developer"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {
+        "php": ">=7"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "6.3.*"
+    },
+    "autoload": {
+        "files": [
+            "inc/utils.php",
+            "inc/object-hooks-remover.php"
+        ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Inpsyde\\Tests\\": "tests/src/"
+        }
+    },
+    "config": {
+        "optimize-autoloader": true
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "0.1-x-dev"
+        }
+    }
+}
