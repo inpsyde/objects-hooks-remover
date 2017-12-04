@@ -187,7 +187,7 @@ or by parameter _names_ and _types_, passing an array like:
 
 
 ```php
-[ '$foo' => string, '$bar' => int, '$baz' => null ]
+[ '$foo' => 'string', '$bar' => 'int', '$baz' => null ]
 ```
 
 The two styles can't be mixed, if the type declaration is used for one param must be used for all of them.
