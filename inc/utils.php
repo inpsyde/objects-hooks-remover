@@ -304,7 +304,7 @@ function match_closure( \Closure $closure, $target_this = null, array $target_ar
 			continue;
 		}
 
-		$param_type_name = $param_type->getName();
+		$param_type_name = (string) $param_type;
 
 		// Match the type or return false.
 		$match = in_array( $param_type_name, SCALARS, TRUE )
