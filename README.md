@@ -4,6 +4,10 @@
 
 ----
 
+[![Build Status](https://travis-ci.org/inpsyde/objects-hooks-remover.svg?branch=master)](https://travis-ci.org/inpsyde/objects-hooks-remover)
+
+----
+
 ## Minimum Requirements and Dependencies
 
 _Object Hooks Remover_ is a [Composer](https://getcomposer.org) package, installable via the package name `inpsyde/object-hooks-remover`.
