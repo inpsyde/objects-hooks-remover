@@ -211,7 +211,7 @@ By the means of bound `$this`, signature, and priority, it is possible to *very 
 // Somewhere in a plugin...
 class Foo {
 
-	public __construct() {
+	public function __construct() {
 		add_filter( 'the_title', function( $title ) { /* ... */ } );
 		add_filter( 'the_content', function( string $content ) { /* ... */ } );
 	}
@@ -302,7 +302,7 @@ remove_instance_hook(
 // Somewhere...
 class Foo {
 
-	public __construct() {
+	public function __construct() {
 		add_filter( 'the_title', [ $this, 'the_title_early', 1 ] );
 		add_filter( 'the_title', [ $this, 'the_title_late', 9999 ] );
 		add_filter( 'the_content', [ $this, 'the_content' ] );
@@ -343,11 +343,11 @@ function remove_invokable_hook(
 // Somewhere...
 class Foo {
 
-	public __construct() {
+	public function __construct() {
 		add_filter( 'template_redirect', $this );
 	}
     
-	public __invoke() {
+	public function __invoke() {
 		/* some code here */
 	}
 
