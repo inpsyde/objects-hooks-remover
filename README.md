@@ -23,7 +23,7 @@ The functions to remove hooks, [`remove_action`](https://developer.wordpress.org
 
 For the remaining cases that involve object instances `remove_action` and `remove_filter` can only be used when having access to the original object instance that was used to add hooks, but many and many times that's not available.
 
-This package provides 5 functions that can be used to remove hooks which uses object methods or closures even without having
+This package provides six functions that can be used to remove hooks which uses object methods or closures even without having
 
 The package functions are:
 
@@ -250,8 +250,6 @@ Inpsyde\remove_instance_hook('the_title', $foo); // remove 2 callbacks
 Inpsyde\remove_instance_hook('the_content', $foo);
 ```
 
-----
-
 
 ## `Inpsyde\remove_invokable_hook()`
 
@@ -289,8 +287,6 @@ new Foo();
 // Somewhere else...
 Inpsyde\remove_invokable_hook('template_redirect', Foo::class);
 ```
-
-----
 
 
 ## `Inpsyde\remove_all_object_hooks()`
