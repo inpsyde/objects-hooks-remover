@@ -368,7 +368,11 @@ abstract class Functions
             return false;
         }
 
-        // phpcs:disable PHPCompatibility.FunctionUse.NewFunctions.enum_existsFound
+        /**
+         * @psalm-suppress UndefinedFunction
+         * @var true
+         * phpcs:disable PHPCompatibility.FunctionUse.NewFunctions.enum_existsFound
+         */
         return enum_exists($thing);
     }
 

@@ -55,4 +55,4 @@ jobs:
                 php: [ '7.4', '8.0', '8.1', '8.2', '8.3' ]
         with:
             PHP_VERSION: ${{ matrix.php }}
-            PSALM_ARGS: --output-format=github --no-suggestions --no-cache --no-diff --find-unused-psalm-suppress
+            PSALM_ARGS: --output-format=github --no-suggestions --no-cache --no-diff

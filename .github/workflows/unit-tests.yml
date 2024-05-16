@@ -53,13 +53,11 @@ jobs:
 
             -   name: Adjust dependencies in 'composer.json'
                 run: |
-                    composer remove roots/wordpress-no-content --dev --no-update
-                    composer require "roots/wordpress-no-content:~${{ matrix.wp-ver }}.0" --no-update
+                    composer remove roots/wordpress-no-content inpsyde/php-coding-standards vimeo/psalm --dev --no-update
+                    composer require "roots/wordpress-no-content:~${{ matrix.wp-ver }}.0" --dev --no-update
 
             -   name: Install dependencies
                 uses: ramsey/composer-install@v3
-                with:
-                    composer-options: "--no-dev"
 
             -   name: Run unit tests
                 run: ./vendor/bin/phpunit --no-coverage
