@@ -2,30 +2,16 @@
 
 > Package to remove WordPress hook callbacks that uses object methods or closures.
 
-----
+[![Static Analysis](https://github.com/inpsyde/objects-hooks-remover/actions/workflows/static-analysis.yml/badge.svg)](https://github.com/inpsyde/objects-hooks-remover/actions/workflows/static-analysis.yml)
+[![Unit Tests](https://github.com/inpsyde/objects-hooks-remover/actions/workflows/unit-tests.yml/badge.svg)](https://github.com/inpsyde/objects-hooks-remover/actions/workflows/unit-tests.yml)
 
-[![Build Status](https://travis-ci.org/inpsyde/objects-hooks-remover.svg?branch=master)](https://travis-ci.org/inpsyde/objects-hooks-remover)
+---
 
-----
-
-## Minimum Requirements and Dependencies
-
-_Object Hooks Remover_ is a [Composer](https://getcomposer.org) package, installable via the package name `inpsyde/object-hooks-remover`.
-
-It has no userland dependencies, it just requires **PHP 7+**.
-
-When installed for development, via Composer, _Object Hooks Remover_ also requires:
-
-- `phpunit/phpunit` (BSD-3-Clause)
-
-----
-
-## Intro (or "What is this?")
+## What is this?
 
 WordPress [plugin API](https://developer.wordpress.org/plugins/hooks/) has a partly incomplete implementation.
 
-[`add_action`](https://developer.wordpress.org/reference/functions/add_action/) and [`add_filter`](https://developer.wordpress.org/reference/functions/add_filter/)
-accepts as "callback" any kind  PHP callable:
+[`add_action`](https://developer.wordpress.org/reference/functions/add_action/) and [`add_filter`](https://developer.wordpress.org/reference/functions/add_filter/) accepts as "callback" any kind PHP callable:
 
 - named functions
 - static object methods
@@ -33,297 +19,241 @@ accepts as "callback" any kind  PHP callable:
 - anonymous functions
 - invokable objects
 
-the functions to remove hooks, [`remove_action`](https://developer.wordpress.org/reference/functions/remove_action/) and [`remove_filter`](https://developer.wordpress.org/reference/functions/remove_filter/),
-only works with named functions and static object methods (2 of the 5 types of callbacks).
+The functions to remove hooks, [`remove_action`](https://developer.wordpress.org/reference/functions/remove_action/) and [`remove_filter`](https://developer.wordpress.org/reference/functions/remove_filter/), works without issues only with named functions and static object methods (2 of the 5 types of callbacks).
 
-Well, ok, this is not completely true. `remove_action` and `remove_filter` can also be used to remove hooks with object 
-methods or closures when the _exact instance_ used to add the hook is available, but many and many times that's not the case.
+For the remaining cases that involve object instances `remove_action` and `remove_filter` can only be used when having access to the original object instance that was used to add hooks, but many and many times that's not available.
 
-This package provides 5 functions that can be used to remove hooks which uses object methods or closures even without having 
-access to the instances of the objects used.
+This package provides 5 functions that can be used to remove hooks which uses object methods or closures even without having
 
 The package functions are:
 
-- `Inpsyde\remove_object_hook`
-- `Inpsyde\remove_closure_hook`
-- `Inpsyde\remove_class_hook`
-- `Inpsyde\remove_instance_hook`
-- `Inpsyde\remove_invokable_hook`
+- `Inpsyde\remove_object_hook()`
+- `Inpsyde\remove_closure_hook()`
+- `Inpsyde\remove_static_method_hook()`
+- `Inpsyde\remove_instance_hook()`
+- `Inpsyde\remove_invokable_hook()`
+- `Inpsyde\remove_all_object_hooks()`
 
-You might notice that there's no difference between action and filters because, expecially in removing, there's absolutely
-no difference between the two. In fact, this is the code that WordPress core for `remove_action`:
+You might notice that there's no difference between action and filters because, especially in removing, there's absolutely no difference between the two.
 
-```php
-function remove_action( $tag, $function_to_remove, $priority = 10 ) {
-	return remove_filter( $tag, $function_to_remove, $priority );
-}
-```
+The return value of all the functions is the number of callbacks removed.
 
-----
+---
 
-
-## `Inpsyde\remove_object_hook`
-
-The signature of this function is the following:
+## `Inpsyde\remove_object_hook()`
 
 ```php
 function remove_object_hook(
 	string $hook,
-	string $class_name,
-	string $method_name = null,
-	int $priority = null,
-	bool $remove_static_callbacks = false
+	string $targetClassName,
+	?string $methodName = null,
+	?int $targetPriority = null,
+	bool $removeStaticCallbacks = false
 ): int
 ```
 
-This function is used to remove hook callbacks that use object methods. By default only targets dynamic methods, but can 
-be used for static methods as well.
+This function is used to remove hook callbacks that use object methods. By default, only targets dynamic methods, but can be used for static methods as well passing `true` to the last parameter.
 
-The first mandatory param is the "tag" we want to remove the callback from.
-
-The second mandatory param is the object class name.
-
-The third optional param is the method name. If not provided (or `null`), it means "all the methods".
-
-The fourth optional param is priority. Unlike WordPress `remove_action`/`remove_filter` not providing a priority means
-"all the priorities".
-
-The fifth optional param is a boolean that defaults to false. When true the function will remove both static and dynamic
-methods.
-
-The return value of this and all the other function of the package is the number of callbacks removed.
-
-**Example**:
+### Usage Example
 
 ```php
 // Somewhere...
-class Foo {
-
-	public function __construct() {
-		add_action( 'init', [ $this, 'init' ], 99 );
+class Foo
+{
+	public function __construct()
+	{
+		add_action('init', [$this, 'init'], 99);
+		add_action('template_redirect', [__CLASS__, 'templateRedirect']);
 	}
 	
-	public function init() {
-		// some code here...
+	public function init(): void
+	{
+	}
+	
+	public static function templateRedirect(): void
+	{
 	}
 }
 
 new Foo();
 
-// Somewhere **else**...
-remove_object_hook( 'init', Foo::class, 'init' );
+// Somewhere else...
+Inpsyde\remove_object_hook('init', Foo::class, 'init');
+Inpsyde\remove_object_hook('init', Foo::class, 'init', removeStaticCallbacks: true);
 ```
 
-----
 
-
-## `Inpsyde\remove_closure_hook`
+## `Inpsyde\remove_closure_hook()`
 
 This function targets hook callbacks added using anonymous functions (aka closures).
 
 Closures are the most tricky callbacks to remove, because it is hard to distinguish them.
 
-In facts, in PHP, all closures are instances of the same class, `Closure`, and not having a method name there's very 
-little left to distinguish one closure from another.
+In facts, in PHP, all closures are instances of the same class, `Closure`, and not having a method name there's very little left to distinguish one closure from another.
 
 This function uses two ways to distinguish closures:
 
-- the object the closure is bound to,
-- the closure signature.
-
-### About closures bound object
-
-Closures can be bound to an object, that means that inside the closure block `$this` refers to the bound object.
-
-When a closure is created inside a class dynamic method, the object binding is automatic: inside the closure, `$this`
-refers to the instance where the closure is created.
-
-When a closure is created inside a static method or outside of any class, inside the closure, `$this` is not defined at 
-all (i.e. the closure is not bound).
-
-It worth nothing that:
-
-- Closure can be "bound" to any object after they are created (see docs for [`Closure::bind`](http://php.net/manual/en/closure.bind.php) and [`Closure::bindTo`](http://php.net/manual/en/closure.bindto.php)).
-  So even closures created outside any class or inside class static methods might have a bound object.
-- [Closures can be created as "static"](http://php.net/manual/en/functions.anonymous.php#functions.anonymous-functions.static).
-  Static closures are never bound, so don't have access to any `$this`, and can't be bound to any object after creation.
-  Any attempt to bind a static closure will fail and result in a warning.
-  
-
-### Function Signature
+- the object the closure is bound to
+- the closure parameters' name and type
 
 `Inpsyde\remove_closure_hook` signature is:
 
 ```php
 function remove_closure_hook(
 	string $hook,
-	$target_this = null,
-	array $target_args = null,
-	int $priority = null
+	?object $targetThis = null,
+	?array $targetArgs = null,
+	?int $targetPriority = null
 ): int 
 ```
 
-The **second optional param**, `$target_this`, can be used to identify the `$this` of the closure that need to be removed.
+The **second optional param**, `$targetThis`, can be used to identify the `$this` of the closure to remove.
 
 It can be:
 
-- `null`, which means "all of them", i.e. the function will not take into account the object bound to closure to see
-  if the closure should be removed or not.
-- `false`, the function will only remove static closures or closure with no bound object.
-- a string containing a class name, the function will only remove closures having a bound object of the given class.
-- an object instance, the function will only remove closures bound to given object.
+- `null`, which means "all of them", i.e. the function will not take into account the object bound to closure to see if the closure should be removed or not
+- `false`, the function will only remove static closures or closure with no bound object
+- a string containing a class name, the function will only remove closures having a bound object of the given class
+- an object instance, the function will only remove closures bound to given object
 
-The **third optional param**, `$target_args` is an array that can be used to distinguish closures by their parameters.
+The **third optional param**, `$targetArgs` is an array that can be used to distinguish closures by their parameters.
 
 For example, a closure like this:
 
 ```php
-$closure = function (string $foo, int $bar, $baz ) { /*... */ };
+$closure = function (string $foo, int $bar, $baz) { /*... */ };
 ```
 
 can be targeted just by parameter _names_, passing an array like:
 
 ```php
-[ '$foo', '$bar', '$baz' ]
+['$foo', '$bar', '$baz']
 ```
 
 or by parameter _names_ and _types_, passing an array like:
 
 
 ```php
-[ '$foo' => 'string', '$bar' => 'int', '$baz' => null ]
+['$foo' => 'string', '$bar' => 'int', '$baz' => null]
 ```
 
 The two styles can't be mixed, if the type declaration is used for one param must be used for all of them.
-In case any of the parameters has no type declaration, `null` has to be used as shown above.
-When the param type is an object, the fully qualified name must be used.
+In case any of the parameters has no type declaration, `null` or `"mixed"` must be used.
 
 It is also possible to pass `null` as third argument (or don't pass anything, which is the same because the param defaults to `null`), and in that case closures to be removed will be only distinguished by the bound `$this`.
 
-In the case both second and third arguments are `null`, which is the default, all closures added to given hook are removed 
-(only optionally filtered by priority).
+In the case both the second and the third arguments are `null`, which is the default, all closures added to given hook are removed (only optionally filtered by priority).
 
-By the means of bound `$this`, signature, and priority, it is possible to *very effectively* distinguish closures to remove. In facts, the only possibility that two closures can't be distinguished one from the other is that they both are added to the same hook, at the same priority, from the same class and they have the same signature...
-
-### Usage example
+### Usage Example
 
 ```php
 // Somewhere in a plugin...
-class Foo {
-
+class Foo
+{
 	public function __construct() {
-		add_filter( 'the_title', function( $title ) { /* ... */ } );
-		add_filter( 'the_content', function( string $content ) { /* ... */ } );
+		add_filter('the_title', function($title) { /* ... */ });
+		add_filter('the_content', function(string $content) { /* ... */ });
 	}
-
 }
 
 new Foo();
 
-
-// Somewhere *else*...
-remove_closure_hook( 'the_title', Foo::class, [ '$title' ] );
-remove_closure_hook( 'the_content', Foo::class, [ '$content' => 'string' ], 10 );
+// Somewhere else...
+Inpsyde\remove_closure_hook('the_title', Foo::class, ['$title']);
+Inpsyde\remove_closure_hook('the_content', Foo::class, ['$content' => 'string'], 10);
 ```
 
-----
 
+## `Inpsyde\remove_static_method_hook()`
 
-## `Inpsyde\remove_class_hook`
-
-Similar to `remove_object_hook` this function targets *only* static methods.
+Similar to `remove_object_hook()` this function targets *only* static methods.
 
 The signature is:
 
 ```php
-function remove_class_hook(
+function remove_static_method_hook(
 	string $hook,
-	string $class_name,
-	string $method_name = null,
-	int $priority = null
+	string $targetClassName,
+	?string $targetMethodName = null,
+	?int $targetPriority = null
 ): int
 ```
 
-Example:
+### Usage Example
 
 ```php
 // Somewhere...
 class Foo {
 
-	public static function instance() {
-		add_action( 'init', [ __CLASS__, 'init' ], 99 );
+	public static function instance()
+	{
+		add_action('init', [__CLASS__, 'init'], 99);
 	}
 
-	public static function init() {
-		// some code here...
+	public static function init()
+	{
 	}
 }
 
 Foo::instance();
 
-
-// Somewhere **else**...
-remove_class_hook( 'init', Foo::class, 'init' );
+// Somewhere else...
+Inpsyde\remove_static_method_hook('init', Foo::class, 'init');
 ```
 
-Even if static class methods could be removed via `remove_action` / `remove_filter`, this function can be still
-useful because can remove callbacks from any priority and even without specifying a method name. For example:
+Even if static class methods could be removed via `remove_action` / `remove_filter`, this function can be still useful because can remove callbacks from any priority and even without specifying a method name.
+
+For example, we can use the following to remove _all_ the static methods of the `Foo::class` attached to the `init` hook:
 
 ```php
-remove_class_hook( 'init', Foo::class );
+remove_static_method_hook('init', Foo::class);
 ```
 
-can be used to remove all the static methods of `Foo` class that are added to `init` hook.
 
-----
-
-
-## `Inpsyde\remove_instance_hook`
+## `Inpsyde\remove_instance_hook()`
 
 This function can be used to remove hook callbacks added with a specific object instance.
 
-When having access to the exact instance used to add some hooks, it would be possible to remove those hooks via core 
-functions `remove_action` / `remove_filter`, but this function can still be useful because in a single call can remove all 
-the hooks that use the instance, no matter the method or the priority used.
+When having access to the exact instance used to add some hooks, it would be possible to remove those hooks via core functions `remove_action` / `remove_filter`, but this function can still be useful because in a single call can remove all the hooks that use the instance, no matter the method or the priority used.
 
 `remove_instance_hook` signature is:
 
 ```php
 remove_instance_hook( 
 	string $hook,
-	$object_instance,
-	int $priority = null
-) : int;
+	object $targetObject,
+	?int $targetPriority = null
+): int;
 ```
 
-**Example**:
+### Usage Example
 
 ```php
 // Somewhere...
-class Foo {
-
-	public function __construct() {
-		add_filter( 'the_title', [ $this, 'the_title_early', 1 ] );
-		add_filter( 'the_title', [ $this, 'the_title_late', 9999 ] );
-		add_filter( 'the_content', [ $this, 'the_content' ] );
+class Foo
+{
+	public function __construct()
+	{
+		add_filter('the_title', [$this, 'the_title_early', 1]);
+		add_filter('the_title', [$this, 'the_title_late', 9999]);
+		add_filter('the_content', [$this, 'the_content']);
 	}
-
 }
 
 global $foo;
 $foo = new Foo();
 
 
-// Somewhere **else**...
+// Somewhere else...
 global $foo;
-remove_instance_hook( 'the_title', $foo ); // remove 2 callbacks
-remove_instance_hook( 'the_content', $foo );
+Inpsyde\remove_instance_hook('the_title', $foo); // remove 2 callbacks
+Inpsyde\remove_instance_hook('the_content', $foo);
 ```
 
 ----
 
 
-## `Inpsyde\remove_invokable_hook`
+## `Inpsyde\remove_invokable_hook()`
 
 This function targets hooks that were added with [invokable objects](http://php.net/manual/en/language.oop5.magic.php#object.invoke).
 
@@ -332,40 +262,100 @@ The signature:
 ```php
 function remove_invokable_hook(
 	string $hook,
-	string $class_name,
-	int $priority = null
+	string $targetClassName,
+	?int $targetPriority = null
 ) : int;
 ```
 
-**Example**:
+### Usage Example
 
 ```php
 // Somewhere...
-class Foo {
-
-	public function __construct() {
-		add_filter( 'template_redirect', $this );
+class Foo
+{
+	public function __construct()
+	{
+		add_filter('template_redirect', $this);
 	}
     
-	public function __invoke() {
-		/* some code here */
+	public function __invoke()
+	{
 	}
-
 }
 
 new Foo();
 
 
-// Somewhere **else**...
-remove_invokable_hook( 'template_redirect', Foo::class );
+// Somewhere else...
+Inpsyde\remove_invokable_hook('template_redirect', Foo::class);
 ```
-
-Note that this function is no more than a shortcut for using `Inpsyde\remove_object_hook` passing `__invoke` as method 
-name param.
 
 ----
 
 
-## License and Copyright
+## `Inpsyde\remove_all_object_hooks()`
 
-This repository is a free software, and is released under the terms of the MIT license. See [LICENSE](./LICENSE) for complete license.
+```php
+function remove_all_object_hooks(
+	class-string|object $targetObject,
+	?bool $removeStaticCallbacks = null
+): int
+```
+
+This function is used to remove all hook callbacks that use the given object or class name.
+
+When passing an object instance, it removes all the hook callbacks using that exact instance.
+
+When passing a class name, it removes all the hook callbacks using that class (regardless the instance).
+
+Static methods are removed when:
+- an object instance is passed and `$removeStaticCallbacks` param is `true`
+- a class name is passed and `$removeStaticCallbacks` param is _not_ `false`
+
+### Usage Example
+
+```php
+// Somewhere...
+class Foo
+{
+	public function __construct()
+	{
+		add_action('init', [$this, 'init'], 99);
+		add_action('template_redirect', [__CLASS__, 'templateRedirect']);
+	}
+	
+	public function init(): void
+	{
+	}
+	
+	public static function templateRedirect(): void
+	{
+	}
+}
+
+global $foo;
+$foo = new Foo();
+
+// Somewhere else...
+global $foo;
+Inpsyde\remove_all_object_hooks($foo); // remove "init" hook
+Inpsyde\remove_all_object_hooks(Foo::class); // would remove both hooks, but only one left
+Inpsyde\remove_all_object_hooks($foo, true); // would remove both hooks, but none left
+Inpsyde\remove_all_object_hooks(Foo::class, false); // would remove the "init" hook, but none left
+```
+
+---
+
+## Minimum Requirements
+
+_Object Hooks Remover_ is a [Composer](https://getcomposer.org) package, installable via the package name `inpsyde/object-hooks-remover`.
+
+It has no dependencies, requires **PHP 7.4+**.
+
+
+---
+
+
+## License
+
+This repository is a free software, and is released under the terms of the GNU General Public License version 2 or (at your option) any later version. See [LICENSE](./LICENSE) for complete license.

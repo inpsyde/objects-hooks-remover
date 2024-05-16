@@ -1,0 +1,58 @@
+name: Static Analysis
+
+on:
+    push:
+        paths:
+            - '**workflows/static-analysis.yml'
+            - '**.php'
+            - '**phpcs.xml.dist'
+            - '**psalm.xml'
+    pull_request:
+        paths:
+            - '**workflows/static-analysis.yml'
+            - '**.php'
+            - '**phpcs.xml.dist'
+            - '**psalm.xml'
+    workflow_dispatch:
+        inputs:
+            jobs:
+                required: true
+                type: choice
+                default: 'Run all'
+                description: 'Choose jobs to run'
+                options:
+                    - 'Run all'
+                    - 'Run PHPCS only'
+                    - 'Run Psalm only'
+                    - 'Run lint only'
+
+concurrency:
+    group: "${{ github.workflow }}-${{ github.ref }}"
+    cancel-in-progress: true
+
+jobs:
+    lint:
+        if: ${{ (github.event_name != 'workflow_dispatch') || ((github.event.inputs.jobs == 'Run all') || (github.event.inputs.jobs == 'Run lint only')) }}
+        uses: inpsyde/reusable-workflows/.github/workflows/lint-php.yml@main
+        strategy:
+            matrix:
+                php: [ '7.4', '8.0', '8.1', '8.2', '8.3' ]
+        with:
+            PHP_VERSION: ${{ matrix.php }}
+            LINT_ARGS: '-e php --colors --show-deprecated ./inc ./src'
+
+    coding-standards-analysis:
+        if: ${{ (github.event_name != 'workflow_dispatch') || ((github.event.inputs.jobs == 'Run all') || (github.event.inputs.jobs == 'Run PHPCS only')) }}
+        uses: inpsyde/reusable-workflows/.github/workflows/coding-standards-php.yml@main
+        with:
+            PHP_VERSION: '8.3'
+
+    static-code-analysis:
+        if: ${{ (github.event_name != 'workflow_dispatch') || ((github.event.inputs.jobs == 'Run all') || (github.event.inputs.jobs == 'Run Psalm only')) }}
+        uses: inpsyde/reusable-workflows/.github/workflows/static-analysis-php.yml@main
+        strategy:
+            matrix:
+                php: [ '7.4', '8.0', '8.1', '8.2', '8.3' ]
+        with:
+            PHP_VERSION: ${{ matrix.php }}
+            PSALM_ARGS: --output-format=github --no-suggestions --no-cache --no-diff --find-unused-psalm-suppress

@@ -1,31 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <phpunit
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/6.3/phpunit.xsd"
-	backupGlobals="false"
-	backupStaticAttributes="false"
-	bootstrap="tests/boot.php"
-	colors="true"
-	convertErrorsToExceptions="true"
-	convertNoticesToExceptions="true"
-	convertWarningsToExceptions="true"
-	processIsolation="false"
-	stopOnFailure="false">
-	<testsuites>
-		<testsuite name="Unit">
-			<directory suffix="Test.php">tests/src</directory>
-		</testsuite>
-	</testsuites>
-	<filter>
-		<whitelist processUncoveredFilesFromWhitelist="true">
-			<directory suffix=".php">inc</directory>
-			<exclude>
-				<directory>tests</directory>
-				<directory>vendor</directory>
-			</exclude>
-		</whitelist>
-	</filter>
-	<logging>
-		<log type="coverage-html" target="coverage" />
-	</logging>
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="vendor/phpunit/phpunit/phpunit.xsd"
+    bootstrap="tests/bootstrap.php"
+    colors="true">
+
+    <coverage processUncoveredFiles="true">
+        <include>
+            <directory suffix=".php">inc</directory>
+            <directory suffix=".php">src</directory>
+        </include>
+        <exclude>
+            <directory>tests</directory>
+            <directory>vendor</directory>
+        </exclude>
+    </coverage>
+
+    <testsuites>
+        <testsuite name="Unit">
+            <directory suffix="Test.php">tests</directory>
+        </testsuite>
+    </testsuites>
+
 </phpunit>
