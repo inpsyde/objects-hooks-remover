@@ -574,6 +574,16 @@ abstract class Functions
             return $targetArgType === 'mixed';
         }
 
-        return (string) $paramType === ltrim($targetArgType, '\\');
+        $targetArgType = ltrim($targetArgType, '\\');
+
+        if (PHP_MAJOR_VERSION === 7) {
+            /** @psalm-suppress UndefinedMethod */
+            $paramTypeName = $paramType->getName();
+            $paramType->allowsNull() and $paramTypeName = "?{$paramTypeName}";
+
+            return $paramTypeName === $targetArgType;
+        }
+
+        return (string) $paramType === $targetArgType;
     }
 }
