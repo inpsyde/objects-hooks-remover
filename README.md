@@ -45,7 +45,7 @@ The return value of all the functions is the number of callbacks removed.
 ```php
 function remove_object_hook(
 	string $hook,
-	string $targetClassName,
+	class-string $targetClassName,
 	?string $methodName = null,
 	?int $targetPriority = null,
 	bool $removeStaticCallbacks = false
@@ -173,7 +173,7 @@ The signature is:
 ```php
 function remove_static_method_hook(
 	string $hook,
-	string $targetClassName,
+	class-string $targetClassName,
 	?string $targetMethodName = null,
 	?int $targetPriority = null
 ): int
@@ -260,7 +260,7 @@ The signature:
 ```php
 function remove_invokable_hook(
 	string $hook,
-	string $targetClassName,
+	class-string $targetClassName,
 	?int $targetPriority = null
 ) : int;
 ```
@@ -305,8 +305,8 @@ When passing an object instance, it removes all the hook callbacks using that ex
 When passing a class name, it removes all the hook callbacks using that class (regardless the instance).
 
 Static methods are removed when:
-- an object instance is passed and `$removeStaticCallbacks` param is `true`
-- a class name is passed and `$removeStaticCallbacks` param is _not_ `false`
+- an object instance is passed and `$removeStaticCallbacks` param _is_ `true`
+- a class name is passed and `$removeStaticCallbacks` param _is not_ `false`
 
 ### Usage Example
 
@@ -347,6 +347,8 @@ Inpsyde\remove_all_object_hooks(Foo::class, false); // would remove the "init" h
 _Object Hooks Remover_ is a [Composer](https://getcomposer.org) package, installable via the package name `inpsyde/object-hooks-remover`.
 
 It has no dependencies, requires **PHP 7.4+**.
+
+It is tested and guaranteed to with WP 5.9+, but _should_ work, at least, with WP 5.3+ (which is the first version officially supporting PHP 7.4).
 
 
 ---
