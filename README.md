@@ -1,6 +1,6 @@
 # Object Hooks Remover
 
-> Package to remove WordPress hook callbacks that uses object methods or closures.
+> Package to remove WordPress hook callbacks that use object methods or closures.
 
 [![Static Analysis](https://github.com/inpsyde/objects-hooks-remover/actions/workflows/static-analysis.yml/badge.svg)](https://github.com/inpsyde/objects-hooks-remover/actions/workflows/static-analysis.yml)
 [![Unit Tests](https://github.com/inpsyde/objects-hooks-remover/actions/workflows/unit-tests.yml/badge.svg)](https://github.com/inpsyde/objects-hooks-remover/actions/workflows/unit-tests.yml)
@@ -21,9 +21,9 @@ WordPress [plugin API](https://developer.wordpress.org/plugins/hooks/) has a par
 
 The functions to remove hooks, [`remove_action`](https://developer.wordpress.org/reference/functions/remove_action/) and [`remove_filter`](https://developer.wordpress.org/reference/functions/remove_filter/), works without issues only with named functions and static object methods (2 of the 5 types of callbacks).
 
-The remaining cases involving object instances `remove_action` and `remove_filter` can only be used when having access to the original object instance that was used to add hooks, but many times that's not available.
+The remaining cases involving object instances `remove_action` and `remove_filter` can only be used when having access to the object instance that was used to add hooks, but many times that's not available.
 
-This package provides six functions that can be used to remove hooks that use object methods or closures even without having access to the original object instance,
+This package provides six functions that can be used to remove hooks that use object methods or closures even without having access to the original object instance.
 
 The package functions are:
 
@@ -216,7 +216,7 @@ This function can be used to remove hook callbacks added with a specific object 
 
 When having access to the exact instance used to add some hooks, it would be possible to remove those hooks via core functions `remove_action` / `remove_filter`, but this function can still be useful because in a single call can remove all the hooks that use the instance, no matter the method or the priority used.
 
-`remove_instance_hook` signature is:
+The `remove_instance_hook` signature is:
 
 ```php
 remove_instance_hook( 
@@ -253,7 +253,7 @@ Inpsyde\remove_instance_hook('the_content', $foo);
 
 ## `Inpsyde\remove_invokable_hook()`
 
-This function targets hooks that were added with [invokable objects](http://php.net/manual/en/language.oop5.magic.php#object.invoke).
+This function targets hooks added with [invokable objects](http://php.net/manual/en/language.oop5.magic.php#object.invoke).
 
 The signature:
 
@@ -348,7 +348,7 @@ _Object Hooks Remover_ is a [Composer](https://getcomposer.org) package, install
 
 It has no dependencies and requires **PHP 7.4+**.
 
-It is tested and guaranteed to with WP 5.9+, but _should_ work, at least, with WP 5.3+ (which is the first version officially supporting PHP 7.4).
+It is tested and guaranteed to work with WP 5.9+, but _should_ work, at least, with WP 5.3+ (which is the first version officially supporting PHP 7.4).
 
 
 ---
