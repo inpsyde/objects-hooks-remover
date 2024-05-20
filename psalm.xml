@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<psalm
+    allowNamedArgumentCalls="false"
+    autoloader="vendor/roots/wordpress-no-content/wp-includes/plugin.php"
+    errorLevel="1"
+    findUnusedBaselineEntry="true"
+    findUnusedCode="false"
+    hideExternalErrors="true"
+    strictBinaryOperands="true"
+    useDocblockPropertyTypes="true"
+    usePhpDocMethodsWithoutMagicCall="true"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="https://getpsalm.org/schema/config"
+    xsi:schemaLocation="https://getpsalm.org/schema/config vendor/vimeo/psalm/config.xsd"
+>
+    <projectFiles>
+        <directory name="inc"/>
+        <directory name="src"/>
+        <ignoreFiles>
+            <directory name="vendor"/>
+        </ignoreFiles>
+    </projectFiles>
+
+    <issueHandlers>
+        <MixedAssignment errorLevel="suppress"/>
+    </issueHandlers>
+</psalm>
