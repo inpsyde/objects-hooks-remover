@@ -354,6 +354,7 @@ It is tested and guaranteed to work with WP 5.9+, but _should_ work, at least, w
 ---
 
 
-## License
+## Copyright and License
 
-This repository is free software released under the terms of the GNU General Public License version 2 or (at your option) any later version. See [LICENSE](./LICENSE) for the complete license.
+This package is [free software](https://www.gnu.org/philosophy/free-sw.en.html) distributed under the terms of the GNU General Public License version 2 or (at your option) any later version. For the full license, see [LICENSE](./LICENSE).
+
