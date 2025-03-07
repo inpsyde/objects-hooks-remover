@@ -79,7 +79,7 @@ new Foo();
 
 // Somewhere else...
 Inpsyde\remove_object_hook('init', Foo::class, 'init');
-Inpsyde\remove_object_hook('init', Foo::class, 'init', removeStaticCallbacks: true);
+Inpsyde\remove_object_hook('template_redirect', Foo::class, 'templateRedirect', removeStaticCallbacks: true);
 ```
 
 
