@@ -5,7 +5,7 @@
     <file>./tests/</file>
 
     <arg value="sp"/>
-    <config name="testVersion" value="7.4-"/>
+    <config name="testVersion" value="8.4-"/>
 
     <rule ref="Inpsyde" />
 
