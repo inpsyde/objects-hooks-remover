@@ -1,34 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ruleset>
+    <arg name="colors" />
+    <arg value="sp" />
+
     <file>./inc/</file>
     <file>./src/</file>
     <file>./tests/</file>
 
-    <arg value="sp"/>
     <config name="testVersion" value="8.4-"/>
 
-    <rule ref="Inpsyde" />
+    <rule ref="Syde-Extra" />
 
-    <rule ref="Inpsyde.CodeQuality.Psr4">
+    <rule ref="SlevomatCodingStandard.Files.TypeNameMatchesFileName">
         <properties>
-            <property
-                name="psr4"
-                type="array"
-                value="
-                    Inpsyde\ObjectHooksRemover=>src,
-                    Inpsyde\ObjectHooksRemover\Tests=>tests/src|tests/cases
-                "
-            />
+            <property name="rootNamespaces" type="array">
+                <element key="src" value="Inpsyde\ObjectHooksRemover"/>
+                <element key="tests/src" value="Inpsyde\ObjectHooksRemover\Tests"/>
+                <element key="tests/cases" value="Inpsyde\ObjectHooksRemover\Tests"/>
+            </property>
         </properties>
     </rule>
 
-    <rule ref="Squiz.PHP.Eval.Discouraged">
-        <exclude-pattern>./tests/</exclude-pattern>
-    </rule>
-    <rule ref="WordPress.PHP.DiscouragedPHPFunctions">
-        <exclude-pattern>./tests/</exclude-pattern>
-    </rule>
-    <rule ref="WordPress.PHP.DevelopmentFunctions">
-        <exclude-pattern>./tests/</exclude-pattern>
-    </rule>
 </ruleset>

@@ -121,7 +121,7 @@ function remove_instance_hook(string $hook, object $targetObject, ?int $targetPr
  */
 function remove_closure_hook(
     string $hook,
-    mixed $targetThis = null,
+    $targetThis = null,
     ?array $targetArgs = null,
     ?int $targetPriority = null
 ): int {
@@ -141,7 +141,7 @@ function remove_closure_hook(
  * @param bool|null $removeStaticCallbacks
  * @return int
  */
-function remove_all_object_hooks(string|object $object, ?bool $removeStaticCallbacks = null): int
+function remove_all_object_hooks($object, ?bool $removeStaticCallbacks = null): int
 {
     return ObjectHooksRemover\Functions::removeAllObjectHooks($object, $removeStaticCallbacks);
 }

@@ -116,7 +116,7 @@ abstract class Functions
      */
     final public static function removeClosureHook(
         string $hook,
-        mixed $targetThis = null,
+        $targetThis = null,
         ?array $targetArgs = null,
         ?int $targetPriority = null
     ): int {
@@ -150,7 +150,7 @@ abstract class Functions
      * @param bool|null $removeStaticCallbacks
      * @return int
      */
-    final public static function removeAllObjectHooks(string|object $object, ?bool $removeStaticCallbacks): int
+    final public static function removeAllObjectHooks($object, ?bool $removeStaticCallbacks): int
     {
         global $wp_filter;
         if (!is_array($wp_filter)) {
@@ -189,7 +189,7 @@ abstract class Functions
      */
     private static function removeAllObjectCallbacks(
         string $hook,
-        string|object $object,
+        $object,
         bool $isClass,
         ?bool $removeStaticCallbacks
     ): int {
@@ -296,7 +296,7 @@ abstract class Functions
      * @param mixed $callbackData
      * @return list{string, object|null, class-string|"", string}
      */
-    private static function parseCallbackData(mixed $callbackData): array
+    private static function parseCallbackData($callbackData): array
     {
         if (!is_array($callbackData)) {
             return ['', null, '', ''];
@@ -354,7 +354,7 @@ abstract class Functions
      *
      * @psalm-assert-if-true class-string|"object" $thing
      */
-    private static function isClassLikeString(mixed $thing): bool
+    private static function isClassLikeString($thing): bool
     {
         if (($thing === '') || !is_string($thing)) {
             return false;
@@ -383,7 +383,7 @@ abstract class Functions
      * @return bool
      */
     private static function matchObjectClass(
-        string|object|null $targetObject,
+        $targetObject,
         string $targetClass,
         bool $exactMatch = false
     ): bool {
@@ -425,7 +425,7 @@ abstract class Functions
      */
     private static function matchClosure(
         \Closure $closure,
-        mixed $targetThis = null,
+        $targetThis = null,
         ?array $targetArgs = null
     ): bool {
 
@@ -511,7 +511,7 @@ abstract class Functions
      * @param array $array
      * @return list{bool, array<non-empty-string, non-empty-string>}
      *
-     * phpcs:disable Inpsyde.CodeQuality.NestingLevel
+     * phpcs:disable SlevomatCodingStandard.Complexity.Cognitive.ComplexityTooHigh
      */
     private static function normalizeTargetArgsList(array $array): array
     {

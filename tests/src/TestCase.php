@@ -14,13 +14,13 @@ abstract class TestCase extends Framework\TestCase
      * @param mixed $args
      * @return mixed
      */
-    protected function execPrivateFunction(string $method, mixed ...$args): mixed
+    protected function execPrivateFunction(string $method, ...$args)
     {
         /**
          * @return mixed
          * @bound
          */
-        $func = function () use ($method, $args): mixed {
+        $func = function () use ($method, $args) {
             /** @var callable $callback */
             $callback = [Functions::class, $method];
 

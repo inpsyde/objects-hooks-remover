@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Inpsyde\ObjectHooksRemover\Tests;
 
 use function Inpsyde\remove_closure_hook;
-use function Inpsyde\remove_instance_hook;
 
 /**
  * @runTestsInSeparateProcesses

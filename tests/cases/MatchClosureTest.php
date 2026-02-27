@@ -97,7 +97,7 @@ class MatchClosureTest extends TestCase
      * @param array $targetArgs
      * @return void
      */
-    public function testMatchClosure(bool $expected, mixed $targetThis, array $targetArgs): void
+    public function testMatchClosure(bool $expected, $targetThis, array $targetArgs): void
     {
         if ($targetThis === '__THIS__') {
             $targetThis = $this;
