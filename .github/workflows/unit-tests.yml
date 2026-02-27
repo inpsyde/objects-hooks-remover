@@ -25,6 +25,7 @@ jobs:
             matrix:
                 php-ver: [ '7.4', '8.0', '8.1', '8.2', '8.3', '8.4' ]
                 wp-ver: [ '5.9', '6.0', '6.1', '6.2', '6.3', '6.4', '6' ]
+                composer: ['']
                 exclude:
                     - php-ver: '8.2'
                       wp-ver: '5.9'
@@ -40,6 +41,11 @@ jobs:
                       wp-ver: '6.2'
                     - php-ver: '8.3'
                       wp-ver: '6.3'
+                include:
+                    - php: '7.4'
+                      composer: '--ignore-platform-req=php'
+                    - php: '8.0'
+                      composer: '--ignore-platform-req=php'
         steps:
             -   name: Checkout
                 uses: actions/checkout@v4
