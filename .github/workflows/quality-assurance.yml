@@ -1,0 +1,35 @@
+name: 'PHP Quality Assurance'
+on:
+  pull_request:
+    paths:
+      - '**.php'
+      - 'composer.*'
+      - 'phpcs.*'
+      - 'phpstan.*'
+jobs:
+  lint-php:
+    uses: inpsyde/reusable-workflows/.github/workflows/lint-php.yml@main
+    strategy:
+      matrix:
+        php:
+          - '7.4'
+          - '8.0'
+          - '8.1'
+          - '8.2'
+          - '8.3'
+          - '8.4'
+    with:
+      PHP_VERSION: '${{ matrix.php }}'
+  coding-standards-php:
+    uses: inpsyde/reusable-workflows/.github/workflows/coding-standards-php.yml@main
+    secrets:
+      COMPOSER_AUTH_JSON: '${{secrets.PACKAGIST_AUTH_JSON}}'
+    with:
+      PHP_VERSION: '8.4'
+  static-analysis-php:
+    uses: inpsyde/reusable-workflows/.github/workflows/static-analysis-php.yml@main
+    secrets:
+      COMPOSER_AUTH_JSON: '${{secrets.PACKAGIST_AUTH_JSON}}'
+    with:
+      PHP_VERSION: '8.4'
+      PHPSTAN_ARGS: '--no-progress --memory-limit=1G -l 1'
