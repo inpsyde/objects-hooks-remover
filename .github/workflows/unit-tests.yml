@@ -73,7 +73,14 @@ jobs:
                 uses: ramsey/composer-install@v3
                 with:
                     dependency-versions: ${{ matrix.dependency-versions }}
-                    composer-options: ${{ matrix.composer || '' }}
+                    composer-options: >-
+                        ${{ 
+                          (
+                            (matrix.php-ver == '7.4' || matrix.php-ver == '8.0')
+                            && '--no-dev --ignore-platform-req=php'
+                            || ''
+                          )
+                          }} ${{ matrix.composer || '' }}
 
             -   name: Run unit tests
                 run: ./vendor/bin/phpunit --no-coverage
