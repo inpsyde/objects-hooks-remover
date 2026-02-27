@@ -116,7 +116,7 @@ abstract class Functions
      */
     final public static function removeClosureHook(
         string $hook,
-        $targetThis = null,
+        mixed $targetThis = null,
         ?array $targetArgs = null,
         ?int $targetPriority = null
     ): int {
@@ -150,7 +150,7 @@ abstract class Functions
      * @param bool|null $removeStaticCallbacks
      * @return int
      */
-    final public static function removeAllObjectHooks($object, ?bool $removeStaticCallbacks): int
+    final public static function removeAllObjectHooks(string|object $object, ?bool $removeStaticCallbacks): int
     {
         global $wp_filter;
         if (!is_array($wp_filter)) {
@@ -189,7 +189,7 @@ abstract class Functions
      */
     private static function removeAllObjectCallbacks(
         string $hook,
-        $object,
+        string|object $object,
         bool $isClass,
         ?bool $removeStaticCallbacks
     ): int {
@@ -296,7 +296,7 @@ abstract class Functions
      * @param mixed $callbackData
      * @return list{string, object|null, class-string|"", string}
      */
-    private static function parseCallbackData($callbackData): array
+    private static function parseCallbackData(mixed $callbackData): array
     {
         if (!is_array($callbackData)) {
             return ['', null, '', ''];
@@ -354,7 +354,7 @@ abstract class Functions
      *
      * @psalm-assert-if-true class-string|"object" $thing
      */
-    private static function isClassLikeString($thing): bool
+    private static function isClassLikeString(mixed $thing): bool
     {
         if (($thing === '') || !is_string($thing)) {
             return false;
@@ -383,7 +383,7 @@ abstract class Functions
      * @return bool
      */
     private static function matchObjectClass(
-        $targetObject,
+        string|object|null $targetObject,
         string $targetClass,
         bool $exactMatch = false
     ): bool {
@@ -425,7 +425,7 @@ abstract class Functions
      */
     private static function matchClosure(
         \Closure $closure,
-        $targetThis = null,
+        mixed $targetThis = null,
         ?array $targetArgs = null
     ): bool {
 

@@ -14,7 +14,7 @@ class ParseCallbackDataTest extends TestCase
      * @param array $expected
      * @return void
      */
-    public function testParseCallbackData($input, array $expected): void
+    public function testParseCallbackData(mixed $input, array $expected): void
     {
         static::assertSame(
             $expected,

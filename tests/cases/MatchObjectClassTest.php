@@ -53,7 +53,7 @@ class MatchObjectClassTest extends TestCase
      */
     public function testMatchObject(
         bool $expected,
-        $targetObject,
+        mixed $targetObject,
         string $targetClass,
         bool $exact
     ): void {
