@@ -42,9 +42,9 @@ jobs:
                     - php-ver: '8.3'
                       wp-ver: '6.3'
                 include:
-                    - php: '7.4'
+                    - php-ver: '7.4'
                       composer: '--ignore-platform-req=php'
-                    - php: '8.0'
+                    - php-ver: '8.0'
                       composer: '--ignore-platform-req=php'
         steps:
             -   name: Checkout
