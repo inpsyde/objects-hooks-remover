@@ -32,4 +32,3 @@ jobs:
       COMPOSER_AUTH_JSON: '${{secrets.PACKAGIST_AUTH_JSON}}'
     with:
       PHP_VERSION: '8.4'
-      PHPSTAN_ARGS: '--no-progress --memory-limit=1G -l 1'

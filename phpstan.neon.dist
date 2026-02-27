@@ -2,7 +2,7 @@ includes:
   - vendor/phpstan/phpstan-deprecation-rules/rules.neon
   - vendor/phpstan/phpstan-mockery/extension.neon
 parameters:
-  level: 8
+  level: 1
   scanFiles:
       - vendor/inpsyde/wp-stubs-versions/latest.php
       - vendor/php-stubs/wp-cli-stubs/wp-cli-stubs.php

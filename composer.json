@@ -58,7 +58,7 @@
     },
     "scripts": {
         "cs": "@php ./vendor/squizlabs/php_codesniffer/bin/phpcs",
-        "stan": "@php ./vendor/bin/phpstan analyse --no-progress --memory-limit=1G -l 1",
+        "stan": "@php ./vendor/bin/phpstan analyse --no-progress --memory-limit=1G",
         "tests": "@php ./vendor/phpunit/phpunit/phpunit --no-coverage",
         "qa": [
             "@cs",
