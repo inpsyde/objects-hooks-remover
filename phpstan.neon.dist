@@ -4,8 +4,8 @@ includes:
 parameters:
   level: 1
   scanFiles:
-      - vendor/inpsyde/wp-stubs-versions/latest.php
       - vendor/php-stubs/wp-cli-stubs/wp-cli-stubs.php
+      - vendor/php-stubs/wordpress-stubs/wordpress-stubs.php
   paths:
     - src/
     - inc/

@@ -18,8 +18,7 @@
     ],
     "minimum-stability": "dev",
     "require": {
-        "php": ">=7.4 < 8.5",
-        "inpsyde/wp-stubs-versions": "dev-latest"
+        "php": ">=7.4 < 8.5"
     },
     "require-dev": {
         "roots/wordpress-no-content": "dev-main",
@@ -28,7 +27,8 @@
         "phpstan/phpstan-mockery": "2.0.x-dev",
         "phpstan/phpstan-deprecation-rules": "2.0.x-dev",
         "php-stubs/wp-cli-stubs": "dev-master",
-        "syde/phpcs": "dev-main"
+        "syde/phpcs": "dev-main",
+        "php-stubs/wordpress-stubs": "^6.9"
     },
     "autoload": {
         "psr-4": {
