@@ -69,18 +69,16 @@ jobs:
                     composer remove roots/wordpress-no-content inpsyde/php-coding-standards vimeo/psalm --dev --no-update
                     composer require "roots/wordpress-no-content:~${{ matrix.wp-ver }}.0" --dev --no-update
 
+            - name: Remove modern dev tools for legacy PHP
+              if: matrix.php-ver == '7.4' || matrix.php-ver == '8.0'
+              run: |
+                  composer remove syde/phpcs vimeo/psalm --dev --no-update
+
             -   name: Install dependencies
                 uses: ramsey/composer-install@v3
                 with:
                     dependency-versions: ${{ matrix.dependency-versions }}
-                    composer-options: >-
-                        ${{ 
-                          (
-                            (matrix.php-ver == '7.4' || matrix.php-ver == '8.0')
-                            && '--no-dev --ignore-platform-req=php'
-                            || ''
-                          )
-                          }} ${{ matrix.composer || '' }}
+                    composer-options: ${{ matrix.composer || '' }}
 
             -   name: Run unit tests
                 run: ./vendor/bin/phpunit --no-coverage
