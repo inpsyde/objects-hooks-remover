@@ -2,6 +2,7 @@
 <ruleset>
     <arg name="colors" />
     <arg value="sp" />
+    <arg name="warning-severity" value="0"/>
 
     <file>./inc/</file>
     <file>./src/</file>
@@ -10,6 +11,10 @@
     <config name="testVersion" value="8.4-"/>
 
     <rule ref="Syde-Extra" />
+
+    <rule ref="Squiz.PHP.Eval.Discouraged">
+        <exclude-pattern>*/tests/*</exclude-pattern>
+    </rule>
 
     <rule ref="SlevomatCodingStandard.Files.TypeNameMatchesFileName">
         <properties>
@@ -20,5 +25,4 @@
             </property>
         </properties>
     </rule>
-
 </ruleset>
