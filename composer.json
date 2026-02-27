@@ -18,13 +18,17 @@
     ],
     "minimum-stability": "dev",
     "require": {
-        "php": ">=7.4 < 8.5"
+        "php": ">=7.4 < 8.5",
+        "inpsyde/wp-stubs-versions": "dev-latest"
     },
     "require-dev": {
-        "roots/wordpress-no-content": ">=6.5.3",
+        "roots/wordpress-no-content": "dev-main",
         "phpunit/phpunit": "^9.6.19",
         "inpsyde/php-coding-standards": "^2",
-        "vimeo/psalm": "^7.0@dev"
+        "phpstan/phpstan": "2.2.x-dev",
+        "phpstan/phpstan-mockery": "2.0.x-dev",
+        "phpstan/phpstan-deprecation-rules": "2.0.x-dev",
+        "php-stubs/wp-cli-stubs": "dev-master"
     },
     "autoload": {
         "psr-4": {
@@ -54,12 +58,21 @@
     },
     "scripts": {
         "cs": "@php ./vendor/squizlabs/php_codesniffer/bin/phpcs",
-        "psalm": "@php ./vendor/vimeo/psalm/psalm --no-suggestions --report-show-info=false --find-unused-psalm-suppress --no-diff --no-cache --no-file-cache --output-format=compact",
+        "stan": "@php ./vendor/bin/phpstan analyse --no-progress --memory-limit=1G -l 1",
         "tests": "@php ./vendor/phpunit/phpunit/phpunit --no-coverage",
         "qa": [
             "@cs",
             "@psalm",
             "@tests"
         ]
-    }
+    },
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "https://repo.packagist.com/inpsyde/"
+        },
+        {
+            "packagist.org": false
+        }
+    ]
 }
