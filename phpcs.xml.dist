@@ -1,34 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ruleset>
+    <arg name="colors" />
+    <arg value="sp" />
+    <arg name="warning-severity" value="0"/>
+
     <file>./inc/</file>
     <file>./src/</file>
     <file>./tests/</file>
 
-    <arg value="sp"/>
-    <config name="testVersion" value="7.4-"/>
+    <config name="testVersion" value="8.4-"/>
 
-    <rule ref="Inpsyde" />
-
-    <rule ref="Inpsyde.CodeQuality.Psr4">
-        <properties>
-            <property
-                name="psr4"
-                type="array"
-                value="
-                    Inpsyde\ObjectHooksRemover=>src,
-                    Inpsyde\ObjectHooksRemover\Tests=>tests/src|tests/cases
-                "
-            />
-        </properties>
-    </rule>
+    <rule ref="Syde-Extra" />
 
     <rule ref="Squiz.PHP.Eval.Discouraged">
-        <exclude-pattern>./tests/</exclude-pattern>
+        <exclude-pattern>*/tests/*</exclude-pattern>
     </rule>
-    <rule ref="WordPress.PHP.DiscouragedPHPFunctions">
-        <exclude-pattern>./tests/</exclude-pattern>
-    </rule>
-    <rule ref="WordPress.PHP.DevelopmentFunctions">
-        <exclude-pattern>./tests/</exclude-pattern>
+
+    <rule ref="SlevomatCodingStandard.Files.TypeNameMatchesFileName">
+        <properties>
+            <property name="rootNamespaces" type="array">
+                <element key="src" value="Inpsyde\ObjectHooksRemover"/>
+                <element key="tests/src" value="Inpsyde\ObjectHooksRemover\Tests"/>
+                <element key="tests/cases" value="Inpsyde\ObjectHooksRemover\Tests"/>
+            </property>
+        </properties>
     </rule>
 </ruleset>

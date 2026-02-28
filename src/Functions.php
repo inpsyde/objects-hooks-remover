@@ -511,7 +511,7 @@ abstract class Functions
      * @param array $array
      * @return list{bool, array<non-empty-string, non-empty-string>}
      *
-     * phpcs:disable Inpsyde.CodeQuality.NestingLevel
+     * phpcs:disable SlevomatCodingStandard.Complexity.Cognitive.ComplexityTooHigh
      */
     private static function normalizeTargetArgsList(array $array): array
     {

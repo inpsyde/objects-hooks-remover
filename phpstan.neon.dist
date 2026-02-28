@@ -1,0 +1,12 @@
+includes:
+  - vendor/phpstan/phpstan-deprecation-rules/rules.neon
+  - vendor/phpstan/phpstan-mockery/extension.neon
+parameters:
+  level: 1
+  scanFiles:
+      - vendor/php-stubs/wp-cli-stubs/wp-cli-stubs.php
+      - vendor/php-stubs/wordpress-stubs/wordpress-stubs.php
+  paths:
+    - src/
+    - inc/
+  treatPhpDocTypesAsCertain: false
